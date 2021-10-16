@@ -102,7 +102,7 @@ def main():
 
     k = 2
         
-    text = read_text('./example2.txt')
+    text = read_text('../example/example2.txt')
 
     fcm = FCM(text,a,k)
     prob_dic = fcm.calculate_probabilities()
