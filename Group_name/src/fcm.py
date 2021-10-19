@@ -1,6 +1,8 @@
 import re
 import math
 import random
+import cProfile
+
 
 class FCM:
     
@@ -27,11 +29,10 @@ class FCM:
         return dic
 
     #Get probability of a state c in the text
-    def frequency_sequence(self,text,seq,k):
+    def frequency_sequence(self,total_seq,seq,k):
         t_seq = tuple(seq)
         if t_seq in self.fs_cache:
             return self.fs_cache[t_seq]
-        total_seq = [text[i:i+k] for i in range(0,len(text),k+1)]
         remain_seq = [i for i in total_seq if i == seq ]
 
         result = len(remain_seq)/len(total_seq)
@@ -78,13 +79,16 @@ class FCM:
     def calculate_entropy(self):
         context_entropy_list = []
         if self.contexts_seen == None: return 0
+        
+        #Total number of sequences
+        total_seq = [self.words[i:i+self.k] for i in range(0,len(self.words),self.k+1)]
         for c in self.contexts_seen:
             all_probs = self.contexts_seen[c]
             #Get Hc entropy for each context/row
             entropy_of_context = -1 * sum([prob * math.log(prob,2) for prob in all_probs])
             #Probability of context/subsequence in total text
-            prob_c = self.frequency_sequence(self.words,list(c),self.k)
-            # print(f'For c={c} entropy={entropy_of_context} Cprob={prob_c}')
+            prob_c = self.frequency_sequence(total_seq,list(c),self.k)
+            #print(f'For c={c} entropy={entropy_of_context} Cprob={prob_c}')
             context_entropy_list.append(entropy_of_context * prob_c)
         return sum(context_entropy_list)
         
@@ -94,6 +98,13 @@ def read_text(address):
         text_unfiltered = file.read()
         text_letters = list(text_unfiltered)
         return text_letters
+
+
+
+#TODO:Check number of CPU's/cores available for PC,
+#If 1 or None do all in one process, else divide
+#list in N sublists and give each one to a process
+#Might have to wait out others
 
 
 def main():
@@ -113,4 +124,5 @@ def main():
     print(f'Entropy:{entropy}')
 
 if __name__ == "__main__":
+    #cProfile.run('main()',sort='tottime')
     main()
