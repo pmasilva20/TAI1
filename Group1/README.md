@@ -1,0 +1,1 @@
+Group project for the TAI course inserted into the Masters in Informatics Engineering at Aveiro University 
