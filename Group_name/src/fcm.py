@@ -3,6 +3,8 @@ import math
 import random
 import pprint
 from generator import Generator
+import cProfile
+
 
 class FCM:
     
@@ -29,16 +31,14 @@ class FCM:
         return dic
 
     #Get probability of a state c in the text
-    def frequency_sequence(self,text,seq,k):
+    def frequency_sequence(self,seq,total_len_seq):
         t_seq = tuple(seq)
-        if t_seq in self.fs_cache:
-            return self.fs_cache[t_seq]
-        total_seq = [text[i:i+k] for i in range(0,len(text),k+1)]
-        remain_seq = [i for i in total_seq if i == seq ]
 
-        result = len(remain_seq)/len(total_seq)
-        self.fs_cache[t_seq] = result
-        return result
+        if t_seq in self.fs_cache:
+            count = self.fs_cache[t_seq]
+            result = count/total_len_seq
+            return result
+        return 0
     
     #Calculate all probabilities for each context
     def calculate_probabilities(self):
@@ -76,17 +76,35 @@ class FCM:
         self.prob_dic = prob_dic
         return prob_dic
 
+    def calculate_frequencies(self,total_seq):
+        for i in total_seq:
+            seq_hash = tuple(i)
+            if seq_hash in self.contexts_seen:
+                if seq_hash in self.fs_cache:
+                    self.fs_cache[seq_hash]+=1
+                else:
+                    self.fs_cache[seq_hash] = 0
+
     #Calculate entropy taking into account 
     def calculate_entropy(self):
         context_entropy_list = []
         if self.contexts_seen == None: return 0
+        
+        #Total number of sequences
+        total_seq = [self.words[i:i+self.k] for i in range(0,len(self.words),self.k+1)]
+        total_seq_len = len(total_seq)
+        
+        #Calculate frequencies before hand
+        #Done in order to prevent multiple transversals of the whole text
+        self.calculate_frequencies(total_seq)
+
         for c in self.contexts_seen:
             all_probs = self.contexts_seen[c]
             #Get Hc entropy for each context/row
             entropy_of_context = -1 * sum([prob * math.log(prob,2) for prob in all_probs])
             #Probability of context/subsequence in total text
-            prob_c = self.frequency_sequence(self.words,list(c),self.k)
-            # print(f'For c={c} entropy={entropy_of_context} Cprob={prob_c}')
+            prob_c = self.frequency_sequence(list(c),total_seq_len)
+            #print(f'For c={c} entropy={entropy_of_context} Cprob={prob_c}')
             context_entropy_list.append(entropy_of_context * prob_c)
         return sum(context_entropy_list)
         
@@ -98,14 +116,21 @@ def read_text(address):
         return text_letters
 
 
+
+#TODO:Check number of CPU's/cores available for PC,
+#If 1 or None do all in one process, else divide
+#list in N sublists and give each one to a process
+#Might have to wait out others
+
+
 def main():
     pp = pprint.PrettyPrinter(indent=4)
 
     a = 0
 
-    k = 2
+    k = 3
         
-    text = read_text('../example/example2.txt')
+    text = read_text('../example/example.txt')
 
     fcm = FCM(text,a,k)
     prob_dic = fcm.calculate_probabilities()
@@ -117,5 +142,7 @@ def main():
 
     gen = Generator(FCM)
 
+
 if __name__ == "__main__":
+    #cProfile.run('main()',sort='tottime')
     main()
