@@ -2,8 +2,8 @@ import re
 import math
 import random
 import pprint
-from generator import Generator
 import cProfile
+from utils import read_text
 
 
 class FCM:
@@ -66,10 +66,12 @@ class FCM:
                 #Prob of event e for context c
                 prob_n = (n + self.a)/total
                 #print(f'Seq:{seq} Nprob:{prob_n} the total from prob is {total}')
-                if tuple(c) in prob_dic:
-                    prob_dic[tuple(c)].append((seq,prob_n))
+                context = ''.join(c)
+
+                if context in prob_dic:
+                    prob_dic[context].append((simbol,prob_n))
                 else:
-                    prob_dic[tuple(c)] = [(seq,prob_n)]
+                    prob_dic[context] = [(simbol,prob_n)]
                 all_probs.append(prob_n)
             contexts_seen[tuple(c)] = all_probs
         self.contexts_seen = contexts_seen
@@ -109,11 +111,6 @@ class FCM:
         return sum(context_entropy_list)
         
 
-def read_text(address):
-    with open(address,'r') as file:
-        text_unfiltered = file.read()
-        text_letters = list(text_unfiltered)
-        return text_letters
 
 
 
@@ -127,7 +124,6 @@ def main():
     pp = pprint.PrettyPrinter(indent=4)
 
     a = 0
-
     k = 3
         
     text = read_text('../example/example.txt')
@@ -139,8 +135,6 @@ def main():
         pp.pprint(f'{key} : {prob_dic[key]}')
     pp.pprint(f'Smoothing: {a} and Order: {k}')
     pp.pprint(f'Entropy:{entropy}')
-
-    gen = Generator(FCM)
 
 
 if __name__ == "__main__":
