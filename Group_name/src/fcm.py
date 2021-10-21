@@ -1,6 +1,8 @@
 import re
 import math
 import random
+import pprint
+from generator import Generator
 
 class FCM:
     
@@ -97,6 +99,7 @@ def read_text(address):
 
 
 def main():
+    pp = pprint.PrettyPrinter(indent=4)
 
     a = 0
 
@@ -108,9 +111,11 @@ def main():
     prob_dic = fcm.calculate_probabilities()
     entropy = fcm.calculate_entropy()
     for key in prob_dic:
-        print(f'{key} : {prob_dic[key]}')
-    print(f'Smoothing: {a} and Order: {k}')
-    print(f'Entropy:{entropy}')
+        pp.pprint(f'{key} : {prob_dic[key]}')
+    pp.pprint(f'Smoothing: {a} and Order: {k}')
+    pp.pprint(f'Entropy:{entropy}')
+
+    gen = Generator(FCM)
 
 if __name__ == "__main__":
     main()
