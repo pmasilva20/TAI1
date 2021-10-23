@@ -18,7 +18,7 @@ class FCM:
     #Count all subsequences of k+1 words
     def count_subsequences(self,words,k):
         dic = {}
-        for i in range(0,len(words),k+1):
+        for i in range(0,len(words)):
             seq = tuple(words[i:i+(k+1)])
             if len(seq) < k+1:
                 continue  
@@ -40,14 +40,19 @@ class FCM:
     
     #Calculate all probabilities for each context
     def calculate_probabilities(self):
+        words_len = len(self.words)
         unique_words = set(self.words)
         seq_count = self.count_subsequences(self.words,self.k)
+
         # Sequences Dictionary
         # for key in seq_count:
         #     print(f'{key} -> {seq_count[key]}')
         prob_dic = {}
         contexts_seen = {}
-        for i in range(0,len(self.words),self.k+1):
+
+
+
+        for i in range(0,words_len):
             c = self.words[i:i+self.k]
             if tuple(c) in contexts_seen:
                 continue
@@ -55,12 +60,13 @@ class FCM:
             sum_all_constexts_c = sum([ seq_count[tuple(c + [simbol])] for simbol in unique_words if tuple(c + [simbol]) in seq_count])
             all_probs = []
             #Get all possible sequences for c + appending with another simbol
+            unique_words_len = len(unique_words)
             for simbol in unique_words:
                 seq = tuple(c + [simbol])
                 if(seq not in seq_count):
                     continue
                 n = seq_count[seq]
-                total = (sum_all_constexts_c + self.a * len(unique_words))
+                total = (sum_all_constexts_c + self.a * unique_words_len)
                 #Prob of event e for context c
                 prob_n = (n + self.a)/total
                 #print(f'Seq:{seq} Nprob:{prob_n} the total from prob is {total}')
@@ -85,11 +91,12 @@ class FCM:
 
     #Calculate entropy taking into account 
     def calculate_entropy(self):
+        words_len = len(self.words)
         context_entropy_list = []
         if self.contexts_seen == None: return 0
         
         #Total number of sequences
-        total_seq = [self.words[i:i+self.k] for i in range(0,len(self.words),self.k+1)]
+        total_seq = [self.words[i:i+self.k] for i in range(0,words_len)]
         total_seq_len = len(total_seq)
         
         #Calculate frequencies before hand
@@ -134,8 +141,8 @@ def main():
     entropy = fcm.calculate_entropy()
     # for key in prob_dic:
     #     print(f'{key} : {prob_dic[key]}')
-    print(f'Smoothing: {a} and Order: {k}')
-    print(f'Entropy:{entropy}')
+    #print(f'Smoothing: {a} and Order: {k}')
+    #print(f'Entropy:{entropy}')
 
 if __name__ == "__main__":
     #cProfile.run('main()',sort='tottime')
