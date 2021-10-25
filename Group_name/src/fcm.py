@@ -44,8 +44,6 @@ class FCM:
         unique_words = set(self.words)
         seq_count = self.count_subsequences(self.words,self.k)
         # Sequences Dictionary
-        # for key in seq_count:
-        #     print(f'{key} -> {seq_count[key]}')
         prob_dic = {}
         contexts_seen = {}
         for i in range(0,len(self.words),self.k+1):
@@ -64,7 +62,6 @@ class FCM:
                 total = (sum_all_constexts_c + self.a * len(unique_words))
                 #Prob of event e for context c
                 prob_n = (n + self.a)/total
-                #print(f'Seq:{seq} Nprob:{prob_n} the total from prob is {total}')
                 if tuple(c) in prob_dic:
                     prob_dic[tuple(c)].append((seq,prob_n))
                 else:
@@ -85,16 +82,19 @@ class FCM:
             entropy_of_context = -1 * sum([prob * math.log(prob,2) for prob in all_probs])
             #Probability of context/subsequence in total text
             prob_c = self.frequency_sequence(self.words,list(c),self.k)
-            # print(f'For c={c} entropy={entropy_of_context} Cprob={prob_c}')
             context_entropy_list.append(entropy_of_context * prob_c)
         return sum(context_entropy_list)
         
 
 def read_text(address):
-    with open(address,'r') as file:
-        text_unfiltered = file.read()
-        text_letters = list(text_unfiltered)
-        return text_letters
+    try:
+        with open(address,'r') as file:
+            text_unfiltered = file.read()
+            text_letters = list(text_unfiltered)
+            return text_letters
+    except:
+        print("Error: No such a file or directory. Could not open/read file:", address)
+        sys.exit()
 
 
 def main():
@@ -113,22 +113,8 @@ def main():
         print(f'Entropy:{entropy}')
     else:
         print("Error: Bad use of Command Line Argument!")
-        print("Usage:$ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpatch <path_of_the_text_file> ")
+        print("Usage:$ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_of_the_text_file> ")
         sys.exit()
-    """
-    a = 0
-
-    k = 2
-        
-    text = read_text('../example/example2.txt')
-
-    fcm = FCM(text,a,k)
-    prob_dic = fcm.calculate_probabilities()
-    entropy = fcm.calculate_entropy()
-    for key in prob_dic:
-        print(f'{key} : {prob_dic[key]}')
-    print(f'Smoothing: {a} and Order: {k}')
-    print(f'Entropy:{entropy}')"""
 
 if __name__ == "__main__":
     main()
