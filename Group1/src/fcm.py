@@ -4,6 +4,7 @@ import random
 import pprint
 import cProfile
 from utils import read_text
+import time
 
 
 class FCM:
@@ -124,17 +125,26 @@ def main():
     pp = pprint.PrettyPrinter(indent=4)
 
     a = 0
-    k = 3
+    k = 9
         
+    
+    
+    initial = time.time()
+    
     text = read_text('../example/example.txt')
 
     fcm = FCM(text,a,k)
     prob_dic = fcm.calculate_probabilities()
     entropy = fcm.calculate_entropy()
-    for key in prob_dic:
-        pp.pprint(f'{key} : {prob_dic[key]}')
-    pp.pprint(f'Smoothing: {a} and Order: {k}')
-    pp.pprint(f'Entropy:{entropy}')
+    
+    end = time.time() - initial
+    
+    print(end)
+    
+    # for key in prob_dic:
+    #     pp.pprint(f'{key} : {prob_dic[key]}')
+    # pp.pprint(f'Smoothing: {a} and Order: {k}')
+    # pp.pprint(f'Entropy:{entropy}')
 
 
 if __name__ == "__main__":
