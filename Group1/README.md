@@ -37,7 +37,7 @@ cd src
 To execute the text generator
 
 ```bash
-python generator.py
+python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_of_the_text_file> -prior <initial_term>
 ```
 
 To calculate text entropy
@@ -48,7 +48,7 @@ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_
 
 ## Authors
 
- -  Pedro Silva (93011)
+ - Pedro Silva (93011)
  - Miguel Almeida (93372)
  - João Soares (93078)
 
