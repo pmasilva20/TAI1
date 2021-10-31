@@ -1,7 +1,10 @@
 import re
 import math
 import random
+import pprint
 import cProfile
+from utils import read_text
+import time
 
 
 class FCM:
@@ -43,15 +46,11 @@ class FCM:
         words_len = len(self.words)
         unique_words = set(self.words)
         seq_count = self.count_subsequences(self.words,self.k)
-
         # Sequences Dictionary
         # for key in seq_count:
         #     print(f'{key} -> {seq_count[key]}')
         prob_dic = {}
         contexts_seen = {}
-
-
-
         for i in range(0,words_len):
             c = self.words[i:i+self.k]
             if tuple(c) in contexts_seen:
@@ -66,14 +65,18 @@ class FCM:
                 if(seq not in seq_count):
                     continue
                 n = seq_count[seq]
+
                 total = (sum_all_constexts_c + self.a * unique_words_len)
                 #Prob of event e for context c
                 prob_n = (n + self.a)/total
+      
                 #print(f'Seq:{seq} Nprob:{prob_n} the total from prob is {total}')
-                if tuple(c) in prob_dic:
-                    prob_dic[tuple(c)].append((seq,prob_n))
+                context = ''.join(c)
+
+                if context in prob_dic:
+                    prob_dic[context].append((simbol,prob_n))
                 else:
-                    prob_dic[tuple(c)] = [(seq,prob_n)]
+                    prob_dic[context] = [(simbol,prob_n)]
                 all_probs.append(prob_n)
             contexts_seen[tuple(c)] = all_probs
         self.contexts_seen = contexts_seen
@@ -114,29 +117,34 @@ class FCM:
         return sum(context_entropy_list)
         
 
-def read_text(address):
-    with open(address,'r') as file:
-        text_unfiltered = file.read()
-        text_letters = list(text_unfiltered)
-        return text_letters
-
 
 
 def main():
+    pp = pprint.PrettyPrinter(indent=4)
 
     a = 0
-
-    k = 3
+    k = 9
         
+    
+    
+    initial = time.time()
+    
     text = read_text('../example/example.txt')
 
     fcm = FCM(text,a,k)
     prob_dic = fcm.calculate_probabilities()
     entropy = fcm.calculate_entropy()
+
+    
+    end = time.time() - initial
+    
+    print(end)
+    
     # for key in prob_dic:
-    #     print(f'{key} : {prob_dic[key]}')
-    #print(f'Smoothing: {a} and Order: {k}')
-    #print(f'Entropy:{entropy}')
+    #     pp.pprint(f'{key} : {prob_dic[key]}')
+    # pp.pprint(f'Smoothing: {a} and Order: {k}')
+    # pp.pprint(f'Entropy:{entropy}')
+
 
 if __name__ == "__main__":
     #cProfile.run('main()',sort='tottime')
