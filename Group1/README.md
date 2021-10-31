@@ -53,4 +53,3 @@ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_
  - João Soares (93078)
 
  
-
