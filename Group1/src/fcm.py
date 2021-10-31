@@ -1,6 +1,7 @@
 import re
 import math
 import random
+import sys
 import pprint
 import cProfile
 from utils import read_text
@@ -30,6 +31,7 @@ class FCM:
             else:
                 dic[seq] = 1
         return dic
+
 
     #Get probability of a state c in the text
     def frequency_sequence(self,seq,total_len_seq):
@@ -92,6 +94,7 @@ class FCM:
                 else:
                     self.fs_cache[seq_hash] = 0
 
+
     #Calculate entropy taking into account 
     def calculate_entropy(self):
         words_len = len(self.words)
@@ -117,35 +120,25 @@ class FCM:
         return sum(context_entropy_list)
         
 
-
-
 def main():
     pp = pprint.PrettyPrinter(indent=4)
-
-    a = 0
-    k = 9
-        
-    
-    
-    initial = time.time()
-    
-    text = read_text('../example/example.txt')
-
-    fcm = FCM(text,a,k)
-    prob_dic = fcm.calculate_probabilities()
-    entropy = fcm.calculate_entropy()
-
-    
-    end = time.time() - initial
-    
-    print(end)
-    
-    # for key in prob_dic:
-    #     pp.pprint(f'{key} : {prob_dic[key]}')
-    # pp.pprint(f'Smoothing: {a} and Order: {k}')
-    # pp.pprint(f'Entropy:{entropy}')
-
+    args = sys.argv[1:]
+    if len(args) == 6 and args[0] == '-a' and args[2] == '-k' and args[4] == '-textpath':
+        a= int(args[1])
+        k=int(args[3])
+        textpath=args[5]
+        text = read_text(textpath)
+        fcm = FCM(text,a,k)
+        prob_dic = fcm.calculate_probabilities()
+        entropy = fcm.calculate_entropy()
+        # for key in prob_dic:
+        #     pp.pprint(f'{key} : {prob_dic[key]}')
+        pp.pprint(f'Smoothing: {a} and Order: {k}')
+        pp.pprint(f'Entropy:{entropy}')
+    else:
+        print("Error: Bad use of Command Line Argument!")
+        print("Usage:$ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_of_the_text_file> ")
+        sys.exit()
 
 if __name__ == "__main__":
-    #cProfile.run('main()',sort='tottime')
     main()
