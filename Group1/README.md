@@ -43,7 +43,7 @@ python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <pat
 To calculate text entropy
 
 ```bash
-python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_of_the_text_file>
+python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file>
 ```
 
 ## Authors

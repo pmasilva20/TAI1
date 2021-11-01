@@ -62,7 +62,7 @@ def main():
     usage="python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file> -prior <initial_term> -s <gen_text_size>")
     
     parser.add_argument("-a", help= "Smoothing parameter", type=int, required=True)
-    parser.add_argument("-k", help= "Model Context size",type=int, required=True)
+    parser.add_argument("-k", help= "Model context size",type=int, required=True)
     parser.add_argument("-path", help= "Path to text file", required=True)
     parser.add_argument("-p","--prior", help= "Prior", required=True)
     parser.add_argument("-s","--size", help= "Generated text size", type=int, default=20)
