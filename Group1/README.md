@@ -37,7 +37,7 @@ cd src
 To execute the text generator
 
 ```bash
-python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_of_the_text_file> -prior <initial_term>
+python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file> -prior <initial_term> -s <gen_text_size>
 ```
 
 To calculate text entropy
