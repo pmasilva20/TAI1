@@ -2,6 +2,8 @@ import numpy as np
 from fcm import FCM
 from utils import read_text
 import pprint
+import sys
+import argparse
 
 class Generator:
 
@@ -52,30 +54,29 @@ class Generator:
  
         return ''.join(gen_text)
     
-
-
-
-
+    
 def main():
 
     pp = pprint.PrettyPrinter(indent=4)
+    parser = argparse.ArgumentParser(description= "Text Generator",
+    usage="python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file> -prior <initial_term> -s <gen_text_size>")
+    
+    parser.add_argument("-a", help= "Smoothing parameter", type=int, required=True)
+    parser.add_argument("-k", help= "Model context size",type=int, required=True)
+    parser.add_argument("-path", help= "Path to text file", required=True)
+    parser.add_argument("-p","--prior", help= "Prior", required=True)
+    parser.add_argument("-s","--size", help= "Generated text size", type=int, default=20)
 
-    a = 0
-    k = 3
+    args = parser.parse_args()
 
-    prior = 'the'
-
-    text = read_text('../example/example.txt')
-
-    fcm = FCM(text,a,k)
-
-
+    if len(args.prior)!= args.k:
+        print("Error: Prior should have the same size of the order of the model!")
+        sys.exit()
+    text = read_text(args.path)
+    fcm = FCM(text,args.a,args.k)
     prob_dic = fcm.calculate_probabilities()
-
-    gen =  Generator(fcm.prob_dic, fcm.k, 20, prior, list(set(fcm.words)))
-
+    gen =  Generator(fcm.prob_dic, fcm.k, args.size, args.prior, list(set(fcm.words)))
     print(gen.gen_text())
-
 
 
 if __name__ == "__main__":

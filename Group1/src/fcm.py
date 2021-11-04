@@ -6,7 +6,7 @@ import pprint
 import cProfile
 from utils import read_text
 import time
-
+import argparse
 
 class FCM:
     
@@ -122,23 +122,24 @@ class FCM:
 
 def main():
     pp = pprint.PrettyPrinter(indent=4)
-    args = sys.argv[1:]
-    if len(args) == 6 and args[0] == '-a' and args[2] == '-k' and args[4] == '-textpath':
-        a= int(args[1])
-        k=int(args[3])
-        textpath=args[5]
-        text = read_text(textpath)
-        fcm = FCM(text,a,k)
-        prob_dic = fcm.calculate_probabilities()
-        entropy = fcm.calculate_entropy()
-        # for key in prob_dic:
-        #     pp.pprint(f'{key} : {prob_dic[key]}')
-        pp.pprint(f'Smoothing: {a} and Order: {k}')
-        pp.pprint(f'Entropy:{entropy}')
-    else:
-        print("Error: Bad use of Command Line Argument!")
-        print("Usage:$ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -textpath <path_of_the_text_file> ")
-        sys.exit()
+    parser = argparse.ArgumentParser(description= "Calculate Entropy",
+    usage="python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file>")
+    
+    parser.add_argument("-a", help= "Smoothing parameter", type=int, required=True)
+    parser.add_argument("-k", help= "Model context size",type=int, required=True)
+    parser.add_argument("-path", help= "Path to text file", required=True)
+
+    args = parser.parse_args()
+
+    text = read_text(args.path)
+    fcm = FCM(text,args.a,args.k)
+    prob_dic = fcm.calculate_probabilities()
+    entropy = fcm.calculate_entropy()
+    # for key in prob_dic:
+    #     pp.pprint(f'{key} : {prob_dic[key]}')
+    pp.pprint(f'Smoothing: {args.a} and Order: {args.k}')
+    pp.pprint(f'Entropy:{entropy}')
+
 
 if __name__ == "__main__":
     main()

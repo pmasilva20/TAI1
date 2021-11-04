@@ -1,4 +1,4 @@
-
+import sys
 
 def read_text(address):
     try:
