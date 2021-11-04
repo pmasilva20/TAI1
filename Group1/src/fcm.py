@@ -65,12 +65,13 @@ class FCM:
             for simbol in unique_words:
                 seq = tuple(c + [simbol])
                 if(seq not in seq_count):
-                    continue
-                n = seq_count[seq]
+                    prob_n = 1/unique_words_len
+                else:
+                    n = seq_count[seq]
+                    total = (sum_all_constexts_c + self.a * unique_words_len)
+                    #Prob of event e for context c
+                    prob_n = (n + self.a)/total
 
-                total = (sum_all_constexts_c + self.a * unique_words_len)
-                #Prob of event e for context c
-                prob_n = (n + self.a)/total
       
                 #print(f'Seq:{seq} Nprob:{prob_n} the total from prob is {total}')
                 context = ''.join(c)
@@ -112,6 +113,7 @@ class FCM:
         for c in self.contexts_seen:
             all_probs = self.contexts_seen[c]
             #Get Hc entropy for each context/row
+            #He gets 0 if prob is 0
             entropy_of_context = -1 * sum([prob * math.log(prob,2) for prob in all_probs])
             #Probability of context/subsequence in total text
             prob_c = self.frequency_sequence(list(c),total_seq_len)
@@ -125,7 +127,7 @@ def main():
     parser = argparse.ArgumentParser(description= "Calculate Entropy",
     usage="python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file>")
     
-    parser.add_argument("-a", help= "Smoothing parameter", type=int, required=True)
+    parser.add_argument("-a", help= "Smoothing parameter", type=float, required=True)
     parser.add_argument("-k", help= "Model context size",type=int, required=True)
     parser.add_argument("-path", help= "Path to text file", required=True)
 
