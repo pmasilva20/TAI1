@@ -37,7 +37,13 @@ cd src
 To execute the text generator
 
 ```bash
-python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file> -prior <initial_term> -s <gen_text_size>
+python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file> -p <initial_term> -s <gen_text_size>
+```
+
+Usage example:
+
+```bash
+python3 generator.py -a 0.01 -k 5 -path ../example/example.txt -p beast
 ```
 
 To calculate text entropy
@@ -46,9 +52,17 @@ To calculate text entropy
 python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_the_text_file>
 ```
 
+Usage example:
+
+```bash
+python3 fcm.py -a 1 -k 2 -path ../example/example.txt
+```
+
 ## Authors
 
  - Pedro Silva (93011)
+ - João Soares (93078)
+ - Miguel Almeida (93372)
  - Miguel Almeida (93372)
  - João Soares (93078)
 
