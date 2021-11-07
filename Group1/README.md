@@ -49,6 +49,8 @@ python3 fcm.py -a <smoothing_parameter> -k <order_of_the_model> -path <path_of_t
 ## Authors
 
  - Pedro Silva (93011)
+ - João Soares (93078)
+ - Miguel Almeida (93372)
  - Miguel Almeida (93372)
  - João Soares (93078)
 
