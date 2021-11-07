@@ -61,8 +61,6 @@ python3 fcm.py -a 1 -k 2 -path ../example/example.txt
 ## Authors
 
  - Pedro Silva (93011)
- - João Soares (93078)
- - Miguel Almeida (93372)
  - Miguel Almeida (93372)
  - João Soares (93078)
 
