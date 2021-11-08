@@ -43,7 +43,7 @@ python3 generator.py -a <smoothing_parameter> -k <order_of_the_model> -path <pat
 Usage example:
 
 ```bash
-python3 generator.py -a 0.01 -k 5 -path ../example/example.txt -p beast
+python3 generator.py -a 0.01 -k 5 -path ../example/example.txt -p beast -s 50
 ```
 
 To calculate text entropy
